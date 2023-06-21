@@ -1,51 +1,37 @@
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Ionicons } from 'react-native-vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Detail = ({ route, navigation }) => {
+const Detail = ({ route }) => {
   const { flower } = route.params
+
+  const [isFavourite, setIsFavourite] = useState(flower.favourite)
+
 
   const handleFavorite = async () => {
     try {
-      // Cập nhật trạng thái "favorite" của bông hoa
-      const updatedFlower = {
-        ...flower,
-        favourite: !flower.favourite,
-      };
-
-      // Lấy danh sách wishlist từ AsyncStorage
-      const jsonWishlist = await AsyncStorage.getItem('flowers');
-      let wishlist = [];
-      if (jsonWishlist !== null) {
-        wishlist = JSON.parse(jsonWishlist);
+      setIsFavourite(!isFavourite)
+      const flowersStorage = await AsyncStorage.getItem('flowers')
+      let flowers = []
+      if (flowersStorage) {
+        flowers = JSON.parse(flowersStorage)
       }
-
-      // Cập nhật trạng thái "favorite" của bông hoa trong danh sách wishlist
-      const updatedWishlist = wishlist.map((item) => {
-        if (item.id === updatedFlower.id) {
-          return updatedFlower;
+      const updatedFlowers = flowers.map((item) => {
+        if (item.id === flower.id) {
+          return {
+            ...item,
+            favourite: !isFavourite
+          }
         }
-        return item;
-      });
-
-      // Lưu danh sách wishlist mới vào AsyncStorage
-      await AsyncStorage.setItem('flowers', JSON.stringify(updatedWishlist));
-
-      // Chuyển hướng trở lại màn hình WishList
-      navigation.goBack();
+        return item
+      })
+      // setIsFavourite(flower)
+      await AsyncStorage.setItem('flowers', JSON.stringify(updatedFlowers));
     } catch (error) {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     handleFavorite();
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
 
   return (
     <View style={{ margin: 10 }}>

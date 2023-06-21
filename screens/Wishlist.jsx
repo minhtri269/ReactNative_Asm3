@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, Button, Pressable, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, Button, Pressable, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
 import flowers from '../data/data'
 import { Ionicons } from 'react-native-vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -11,6 +11,18 @@ const WishList = () => {
 
   const [wishlist, setWishlist] = useState([]);
 
+  useEffect(() => {
+    loadWishlist();
+  }, []);
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadWishlist();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const loadWishlist = async () => {
     try {
@@ -21,26 +33,29 @@ const WishList = () => {
       }
     } catch (error) {
       console.log(error);
-
     }
   };
 
-  useEffect(() => {
-    loadWishlist();
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      loadWishlist();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
   const clearWishlist = async () => {
     try {
-      await AsyncStorage.removeItem('flowers');
-      setWishlist([]);
+      Alert.alert(
+        'Confirmation',
+        'Are you sure you want to clear all this wishlist',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel'
+          },
+          {
+            text: 'Clear all',
+            style: 'destructive',
+            onPress: () => {
+              AsyncStorage.removeItem('flowers');
+              setWishlist([]);
+            }
+          }
+        ]
+      )
     } catch (error) {
       console.log(error);
     }

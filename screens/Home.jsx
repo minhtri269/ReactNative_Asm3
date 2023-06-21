@@ -7,7 +7,7 @@ import Orchids from './Orchids'
 const Home = () => {
   return (
     <View style={styles.view}>
-      <Text style={styles.title}>Collection</Text>
+      <Text style={styles.title}>Flowers Shop 🌸</Text>
       <Orchids />
     </View>
   )

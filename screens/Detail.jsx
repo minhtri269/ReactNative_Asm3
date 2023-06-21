@@ -4,52 +4,108 @@ import { Ionicons } from 'react-native-vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Detail = ({ route }) => {
-  const { flower } = route.params
+  const { flowerDetail } = route.params;
+  const [isFavourite, setIsFavourite] = useState(flowerDetail.favourite);
 
-  const [isFavourite, setIsFavourite] = useState(flower.favourite)
-
-
-  const handleFavorite = async () => {
-    try {
-      setIsFavourite(!isFavourite)
-      const flowersStorage = await AsyncStorage.getItem('flowers')
-      let flowers = []
-      if (flowersStorage) {
-        flowers = JSON.parse(flowersStorage)
-      }
-      const updatedFlowers = flowers.map((item) => {
-        if (item.id === flower.id) {
-          return {
-            ...item,
-            favourite: !isFavourite
+  useEffect(() => {
+    const getFavouriteStatus = async () => {
+      try {
+        const storedFlowers = await AsyncStorage.getItem('flowers');
+        if (storedFlowers) {
+          const parsedFlowers = JSON.parse(storedFlowers);
+          const flower = parsedFlowers.find(item => item.id === flowerDetail.id);
+          if (flower) {
+            setIsFavourite(flower.favourite);
           }
         }
-        return item
-      })
-      // setIsFavourite(flower)
-      await AsyncStorage.setItem('flowers', JSON.stringify(updatedFlowers));
+      } catch (error) {
+        console.log('Error retrieving flowers from AsyncStorage:', error);
+      }
+    };
+
+    getFavouriteStatus();
+  }, []);
+
+  const updateFavouriteStatus = async () => {
+    const updatedFlower = { ...flowerDetail, favourite: !isFavourite };
+    try {
+      const storedFlowers = await AsyncStorage.getItem('flowers');
+      if (storedFlowers) {
+        const parsedFlowers = JSON.parse(storedFlowers);
+        const updatedFlowers = parsedFlowers.map(item => {
+          if (item.id === updatedFlower.id) {
+            return updatedFlower;
+          }
+          return item;
+        });
+        await AsyncStorage.setItem('flowers', JSON.stringify(updatedFlowers));
+        setIsFavourite(!isFavourite);
+      }
     } catch (error) {
-      console.log(error);
+      console.log('Error updating flowers in AsyncStorage:', error);
     }
   };
+  // console.log(isFavourite)
+
+  useEffect(() => {
+    const saveFavouriteStatus = async () => {
+      const storedFlowers = await AsyncStorage.getItem('flowers');
+      if (storedFlowers) {
+        const parsedFlowers = JSON.parse(storedFlowers);
+        const updatedFlowers = parsedFlowers.map(item => {
+          if (item.id === flowerDetail.id) {
+            return { ...item, favourite: isFavourite };
+          }
+          return item;
+        });
+        await AsyncStorage.setItem('flowers', JSON.stringify(updatedFlowers));
+      }
+    };
+
+    saveFavouriteStatus();
+  }, [isFavourite]);
+
+  // const handleFavorite = async () => {
+  //   try {
+  //     setIsFavourite(!isFavourite)
+  //     const flowersStorage = await AsyncStorage.getItem('flowers')
+  //     let flowers = []
+  //     if (flowersStorage) {
+  //       flowers = JSON.parse(flowersStorage)
+  //     }
+  //     const updatedFlowers = flowers.map((item) => {
+  //       if (item.id === flower.id) {
+  //         return {
+  //           ...item,
+  //           favourite: !isFavourite
+  //         }
+  //       }
+  //       return item
+  //     })
+  //     // setIsFavourite(flower)
+  //     await AsyncStorage.setItem('flowers', JSON.stringify(updatedFlowers));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <View style={{ margin: 10 }}>
       <View style={styles.card}>
         <View style={styles.header}>
-          <Pressable style={styles.iconContainer} onPress={handleFavorite}>
+          <Pressable style={styles.iconContainer} onPress={updateFavouriteStatus}>
             {/* <Ionicons name="heart-outline" size={24} /> */}
-            {flower.favourite === true ? (
+            {isFavourite === true ? (
               <Ionicons name="heart" size={24} color="red" />
             ) : (
               <Ionicons name="heart-outline" size={24} color="black" />
             )}
           </Pressable>
         </View>
-        <Image style={styles.image} source={flower.image} />
-        <Text style={styles.name}>{flower.name}</Text>
-        <Text style={styles.country}>{flower.country}</Text>
-        <Text style={styles.description}>{flower.description}</Text>
+        <Image style={styles.image} source={flowerDetail.image} />
+        <Text style={styles.name}>{flowerDetail.name}</Text>
+        <Text style={styles.country}>{flowerDetail.country}</Text>
+        <Text style={styles.description}>{flowerDetail.description}</Text>
       </View>
     </View>
   )

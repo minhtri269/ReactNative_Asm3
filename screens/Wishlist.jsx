@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, Button, Pressable, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
 import flowers from '../data/data'
 import { Ionicons } from 'react-native-vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const WishList = () => {
@@ -11,18 +11,14 @@ const WishList = () => {
 
   const [wishlist, setWishlist] = useState([]);
 
-  useEffect(() => {
-    loadWishlist();
-  }, []);
-
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      loadWishlist();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  // useEffect(() => {
+  //   loadWishlist();
+  // }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadWishlist()
+    }, [])
+  )
 
   const loadWishlist = async () => {
     try {
@@ -61,7 +57,6 @@ const WishList = () => {
     }
   };
 
-
   const handleFavourite = async (flower) => {
     try {
       const updatedFlowersData = wishlist.map((item) => {
@@ -85,10 +80,11 @@ const WishList = () => {
       <Pressable style={styles.btn} onPress={clearWishlist}>
         <Text style={styles.btnText}>Clear All</Text>
       </Pressable>
+
       <View style={styles.container}>
         {wishlist.map(flower => (
           ((flower && flower.favourite === true) && <React.Fragment key={flower.id}>
-            <TouchableOpacity style={styles.card} key={flower.id} onPress={() => { navigation.navigate('Detail', { flower: flower }) }} >
+            <TouchableOpacity style={styles.card} key={flower.id} onPress={() => { navigation.navigate('Detail', { flowerDetail: flower }) }} >
               <Pressable style={styles.iconContainer}
                 onPress={() => handleFavourite(flower)}
               >
@@ -99,8 +95,7 @@ const WishList = () => {
                 source={flower.image} />
               <Text style={styles.text}>{flower.name}</Text>
             </TouchableOpacity>
-          </React.Fragment>
-          )
+          </React.Fragment>)
         ))}
       </View>
     </ScrollView>

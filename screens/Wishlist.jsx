@@ -77,9 +77,14 @@ const WishList = () => {
 
   return (
     <ScrollView style={styles.containerBtn}>
-      <Pressable style={styles.btn} onPress={clearWishlist}>
-        <Text style={styles.btnText}>Clear All</Text>
-      </Pressable>
+      {wishlist.length > 0 ? (<>
+        <Pressable style={styles.btn} onPress={clearWishlist}>
+          <Text style={styles.btnText}>Clear All</Text>
+        </Pressable>
+      </>) : (<View style={styles.noFlowersContainer}>
+        <Text style={styles.noFlowersText}>No flowers in wishlist </Text>
+      </View>)}
+
 
       <View style={styles.container}>
         {wishlist.map(flower => (
@@ -154,6 +159,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     fontWeight: '500'
+  },
+  noFlowersContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noFlowersText: {
+    textAlign: 'center',
+    fontSize: 16,
   },
 })
 

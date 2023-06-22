@@ -65,30 +65,6 @@ const Detail = ({ route }) => {
     saveFavouriteStatus();
   }, [isFavourite]);
 
-  // const handleFavorite = async () => {
-  //   try {
-  //     setIsFavourite(!isFavourite)
-  //     const flowersStorage = await AsyncStorage.getItem('flowers')
-  //     let flowers = []
-  //     if (flowersStorage) {
-  //       flowers = JSON.parse(flowersStorage)
-  //     }
-  //     const updatedFlowers = flowers.map((item) => {
-  //       if (item.id === flower.id) {
-  //         return {
-  //           ...item,
-  //           favourite: !isFavourite
-  //         }
-  //       }
-  //       return item
-  //     })
-  //     // setIsFavourite(flower)
-  //     await AsyncStorage.setItem('flowers', JSON.stringify(updatedFlowers));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   return (
     <View style={{ margin: 10 }}>
       <View style={styles.card}>

@@ -10,7 +10,7 @@ const Drawer = createDrawerNavigator()
 
 const DrawerLayout = () => {
     return (
-        <Drawer.Navigator initialRouteName='Home' screenOptions={{ headerShown: true}}>
+        <Drawer.Navigator initialRouteName='Home' screenOptions={{ headerShown: true }}>
             <Drawer.Screen name='Home' component={BottomTab} />
             <Drawer.Screen name='Setting' component={Setting} />
         </Drawer.Navigator>

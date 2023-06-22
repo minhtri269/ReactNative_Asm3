@@ -39,6 +39,12 @@ const Orchids = () => {
         }, [])
     )
 
+    useFocusEffect(
+        React.useCallback(() => {
+            applyFilter(flowersData, selectedCategory)
+        }, [flowersData, selectedCategory])
+    )
+
     useEffect(() => {
         const saveFlowers = async () => {
             try {

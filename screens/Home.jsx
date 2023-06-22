@@ -16,13 +16,11 @@ const Home = () => {
 const styles = StyleSheet.create({
   view: {
     padding: 12,
-    // backgroundColor: 'white'
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     color: '#6fc4f2'
-    // textAlign: 'center'
   }
 });
 

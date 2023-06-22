@@ -11,9 +11,6 @@ const WishList = () => {
 
   const [wishlist, setWishlist] = useState([]);
 
-  // useEffect(() => {
-  //   loadWishlist();
-  // }, []);
   useFocusEffect(
     React.useCallback(() => {
       loadWishlist()

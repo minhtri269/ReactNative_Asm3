@@ -70,18 +70,6 @@ const Orchids = () => {
         applyFilter(flowersData, category);
     };
 
-    // useEffect(() => {
-    //     const unsubscribe = navigation.addListener('focus', () => {
-    //         loadFlowersData();
-    //     });
-
-    //     return unsubscribe;
-    //   }, [navigation]);
-
-    // useEffect(() => {
-    //     loadFlowersData();
-    // }, []);
-
     const handleFavourite = async (flower) => {
         try {
             const updatedFlowersData = flowersData.map((item) => {

@@ -45,7 +45,6 @@ const Detail = ({ route }) => {
       console.log('Error updating flowers in AsyncStorage:', error);
     }
   };
-  // console.log(isFavourite)
 
   useEffect(() => {
     const saveFavouriteStatus = async () => {
@@ -70,7 +69,6 @@ const Detail = ({ route }) => {
       <View style={styles.card}>
         <View style={styles.header}>
           <Pressable style={styles.iconContainer} onPress={updateFavouriteStatus}>
-            {/* <Ionicons name="heart-outline" size={24} /> */}
             {isFavourite === true ? (
               <Ionicons name="heart" size={24} color="red" />
             ) : (
